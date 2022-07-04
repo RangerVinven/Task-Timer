@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar';
 const Home: NextPage = () => {
   return (
     <div>
-		<Navbar />
+		Home page
     </div>
   );
 }
