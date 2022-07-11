@@ -4,9 +4,20 @@ import { getSession } from "next-auth/react";
 
 import { prisma } from "../../../utils/prismaClient";
 
+type Task ={
+    id: String,
+  
+    name: String
+    hours: number
+    minutes: number
+    seconds: number
+  
+    userId: String
+  }
+
 type Response = {
-    success?: string
-    error?: string
+    tasks?: Task[]
+    error?: String
 }
 
 export default async function handler(
@@ -17,7 +28,7 @@ export default async function handler(
 
     // Makes sure the user is logged in and using POST
     if(!session) res.status(401).json({error: "You are not logged in"});
-    if(req.method !== "POST") res.status(405).json({error: "Method not allowed"});
+    if(req.method !== "GET") res.status(405).json({error: "Method not allowed"});
 
     // Gets the user (to use the user's id)
     const user = await prisma.user.findUnique({
@@ -26,23 +37,13 @@ export default async function handler(
         }
     });
 
-    // Makes sure the necessary data is present
-    if(!req.body.task || !req.body.hours || !req.body.minutes || !req.body.seconds) res.status(500).json({error: "Missing data"});
-
-    const task = await prisma.task.create({
-        data: {
-            userId: user!.id.toString(),
-
-            name: req.body.task,
-            hours: req.body.hours,
-            minutes: req.body.minutes,
-            seconds: req.body.seconds
+    const tasks = await prisma.task.findMany({
+        where: {
+            userId: user!.id.toString()
         }
     });
 
-    if(task.id) {        
-        res.status(200).json({success: "Task added"});
-    } else {
-        res.status(500).json({error: "Something went wrong"});
+    if(tasks) {
+        res.status(200).json({tasks: tasks});
     }
 }

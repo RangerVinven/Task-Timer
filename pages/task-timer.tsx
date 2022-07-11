@@ -1,9 +1,16 @@
 import React from 'react'
-import { useSession } from "next-auth/react"
 
 import Navbar from '../components/Navbar';
 
+const getTasks = async () => {
+    const tasks = await fetch("http://locahost:3000/api/tasks/getTasks");
+    console.log(tasks);
+}
+
 export default function TaskTimer() {
+    
+    getTasks();
+    
     return (
         <div>
             <Navbar />
