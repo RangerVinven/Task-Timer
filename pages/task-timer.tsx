@@ -23,7 +23,18 @@ export default function TaskTimer() {
 
                     <div className="flex justify-center">
                         <input className="w-42 bg-slate-200 pl-1 mr-3 rounded-md" type="text" placeholder="Task" />
-                        <button className="bg-green-300 px-1 rounded-md">Add</button>
+                        <button className="bg-green-300 px-1 rounded-md" onClick={() => fetch("/api/tasks/addTask", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                task: "Hello",
+                                hours: 1,
+                                minutes: 30,
+                                seconds: 15
+                            })
+                        })}>Add</button>
                     </div>
                 </div>
             </div>
